@@ -99,25 +99,18 @@ public class BlackJack {
 		//deals two cards from the top of the deck to a player
 		for(Player P : this.Players) {
 			
-		/*	if(P.equals(this.Players.get(1))) {
-				P.Hand.add(new card(1, "Spade")); 
-				P.Hand.add(new card(10, "Spade"));
-				continue; 
-			} */
-			
 			this.hit(P);
 			this.hit(P);
 			if(P.name != "House") {
 				System.out.println(P); 
 			}
-			/* can't remove P while using P to travese come up with a better solution to removing players that have a black jack
-			if(this.isBlackJack(P)) {
-				System.out.println("BLACKJACK!");
-				//remove the player from the current hand, they have already won
-				this.Players.remove(P); 
-		
-			} */ 
+			if(P.handValue == 21) {
+				System.out.println("BLACKJACK! \n");
+				P.blackjack = true; 
+			}
 		}//end of starting deal
+		
+		
 		
 		//dealer will always be the first person in the list, so we can print their hand seperately
 		System.out.println("[Hidden, " + this.Players.get(0).Hand.get(1) + "] Total: [" + this.Players.get(0).handValue + "]"); 
@@ -125,6 +118,12 @@ public class BlackJack {
 		while(playerCount != this.Players.size()) {
 			//grab which ever player's current turn it is
 			Player currentPlayer = this.Players.get(playerCount);
+			
+			//if the player has a blackjack skip their turn
+			if(currentPlayer.blackjack == true) {
+				playerCount++; 
+				continue; 
+			}//end of black jack if
 			
 			//gets next action
 			System.out.println(currentPlayer.name + " Enter 1 to hit 2 to stay: \n");
@@ -220,14 +219,6 @@ public class BlackJack {
 	}//end of isNumeric
 	
 	//takes in a player and sees if their hand is a black jack
-	//only needs to check the first two cards as a black jack is only possible given the first two cards of the game
-	public Boolean isBlackJack(Player P) {
-		if( P.Hand.get(0).cardType == "Ace" || P.Hand.get(1).cardType == "Ace" ) {
-			if(P.Hand.get(0).myValue == 10 || P.Hand.get(1).myValue == 10)
-				return true;
-		}
-		return false; 
-	}//end of is black jack
 	
 	public void resetPlayers() {
 		for(Player P : this.Players) {

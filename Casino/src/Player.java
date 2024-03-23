@@ -7,13 +7,15 @@ public class Player {
 	protected int chips; 
 	protected int handValue; 
 	protected String name; 
+	protected Boolean blackjack; 
 	
 	public Player (String nameIn) {
 		this.Hand = new ArrayList<card>();
 		this.score =0; 
 		this.chips =0; 
 		this.handValue = 0;
-		this.name = nameIn; 
+		this.name = nameIn;
+		this.blackjack = false; 
 	}//end of constructor
 	
 	public String toString() {
@@ -28,7 +30,8 @@ public class Player {
 	
 	public void resetHand() {
 		this.Hand.removeAll(this.Hand);
-		handValue = 0; 
+		handValue = 0;
+		blackjack = false; 
 	}
 	
 	public static void main(String[] args) {
