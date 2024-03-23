@@ -24,7 +24,8 @@ public class Player {
 		}else { //prints out multiple hands
 			for(Hand H : this.Hands) {
 				System.out.println("Hand: " + handNumber + "\t" + H );
-				handNumber++; 
+				handNumber++;
+				System.out.println("pop"); 
 			}//end of for loop 
 		}//end of else
 		return ""; 

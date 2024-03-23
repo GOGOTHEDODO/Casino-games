@@ -28,7 +28,7 @@ public class Deck {
 			}
 		}//end of deck creation for loop
 		
-		
+		this.shuffle();
 	}//end of constructor
 	
 	public String toString() {

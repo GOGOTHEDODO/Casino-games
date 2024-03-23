@@ -62,13 +62,13 @@ public class BlackJack {
 		Players.add(new Player("House")); 
 		//add rest of the players 
 		for(int i=0; i< numPlayers; i++) {
-			Players.add(new Player("Player " + (i + 1))); 
+			Players.add(new Player("Player " + (i + 1)));
+			System.out.println(Players.get(i +1)); 
 		}
-		
-		System.out.println(Players); 
-		
+ 
 		numPlayers = Integer.parseInt(Buffer);
 		this.shoe.shuffle();
+		
 		do{
 			this.playHand();
 			System.out.println("Please enter 1 to play another hand, 2 to quit");
@@ -91,6 +91,9 @@ public class BlackJack {
 	}//end of play Game
 	
 	public void playHand() {
+		//one the deck reaches 50% capacity shuffle the deck
+		if(this.shoe.size <= (int) (this.numDecks*52)/2)
+			shoe = new Deck (numDecks); 
 		
 		//dealer is always player zero so we start the hit count at one
 		playerCount = 1; 
@@ -106,7 +109,7 @@ public class BlackJack {
 			} */ 
 			
 			if(P.name != "House") {
-				System.out.println(P.name + " " +  newHand); 
+				System.out.println(P.name + ": " + newHand + "\n"); 
 			}
 			
 			if(newHand.myValue == 21) {
@@ -119,7 +122,7 @@ public class BlackJack {
 //////////////////////////////////////////////////////////END OF STARTING DEAL////////////////////////////////////////////////////
 		
 		//dealer will always be the first person in the list, so we can print their hand seperately
-		System.out.println("[Hidden, " + this.Players.get(0).Hands.get(0).myCards.get(1) + "]"); 
+		System.out.println("House: [Hidden, " + this.Players.get(0).Hands.get(0).myCards.get(1) + "] \n"); 
 			
 		while(playerCount != this.Players.size()) {
 			//grab which ever player's current turn it is
@@ -132,7 +135,7 @@ public class BlackJack {
 			}//end of black jack if
 			
 			//gets next action
-			System.out.println(currentPlayer.name + ": \n "); 
+			System.out.println(currentPlayer.name + " your turn \n "); 
 			for(Hand H : currentPlayer.Hands) {
 				do {
 					if(currentPlayer.Hands.size() == 1)
