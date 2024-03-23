@@ -2,36 +2,36 @@ import java.util.ArrayList;
 
 public class Player {
 
-	protected ArrayList<card> Hand;
 	protected int score; 
-	protected int chips; 
-	protected int handValue; 
+	protected int chips;  
 	protected String name; 
-	protected Boolean blackjack; 
+	protected ArrayList<Hand> Hands; 
 	
 	public Player (String nameIn) {
-		this.Hand = new ArrayList<card>();
+		this.Hands = new ArrayList<Hand>(); 
+		this.Hands.add(new Hand());
 		this.score =0; 
 		this.chips =0; 
-		this.handValue = 0;
 		this.name = nameIn;
-		this.blackjack = false; 
 	}//end of constructor
 	
 	public String toString() {
-		return "Player: " + this.name + " " + this.Hand + " Total: [" + this.handValue + "]\n"; 
+		int handNumber= 0; 
+		System.out.println("Player: " + this.name + ":"); 
+		//prints out a single hand
+		if(Hands.size() == 1) {
+			System.out.println("\t " + this.Hands.get(0)); 
+		}else { //prints out multiple hands
+			for(Hand H : this.Hands) {
+				System.out.println("Hand: " + handNumber + "\t" + H );
+				handNumber++; 
+			}//end of for loop 
+		}//end of else
+		return ""; 
 	}//end of to string
 	
-	public void updateHandValue() { 
-		for(card C : this.Hand) {
-			handValue += C.myValue; 
-		}
-	}//end of update Hand Value
-	
-	public void resetHand() {
-		this.Hand.removeAll(this.Hand);
-		handValue = 0;
-		blackjack = false; 
+	public void reset() {
+		this.Hands.removeAll(Hands); 
 	}
 	
 	public static void main(String[] args) {
