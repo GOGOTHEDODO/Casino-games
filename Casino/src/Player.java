@@ -16,11 +16,20 @@ public class Player {
 		this.name = nameIn; 
 	}//end of constructor
 	
+	public String toString() {
+		return "Player: " + this.name + " " + this.Hand + " Total: [" + this.handValue + "]\n"; 
+	}//end of to string
+	
 	public void updateHandValue() { 
 		for(card C : this.Hand) {
 			handValue += C.myValue; 
 		}
 	}//end of update Hand Value
+	
+	public void resetHand() {
+		this.Hand.removeAll(this.Hand);
+		handValue = 0; 
+	}
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
