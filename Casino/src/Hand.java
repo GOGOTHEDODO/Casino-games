@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Hand {
-	int myValue; 
+	int myValue;
 	ArrayList<card> myCards; 
 	Boolean blackJack; 
 	

@@ -31,32 +31,12 @@ public class BlackJack {
 		Boolean continueGame; 
 		
 		System.out.println("How many decks do you want to play with? \n");
-		Buffer = scan.next(); 
-		while(!valid) {
-			if(isNumeric(Buffer)) {
-				valid = true; 
-			}else {
-				System.out.println("Please input only numbers: \n");
-				Buffer = scan.next(); 
-			}
-		}//end of number validation check
-		numDecks = Integer.parseInt(Buffer);
-		valid = false; 
+		this.numDecks = this.numericInputValidator(scan.next()); 
 		
-		shoe = new Deck (numDecks);
+		this.shoe = new Deck (numDecks);
 		
 		System.out.println("How many people are playing?"); 
-		Buffer = scan.next(); 
-		while(!valid) {
-			if(isNumeric(Buffer)) {
-				valid = true; 
-			}else {
-				System.out.println("Please input only numbers: \n");
-				Buffer = scan.next(); 
-			}
-		}//end of number validation check
-		valid = false; 
-		numPlayers = Integer.parseInt(Buffer); 
+		this.numPlayers = this.numericInputValidator(scan.next()); 
 		
 		//pre add the house as player zero
 		Players.add(new Player("House")); 
@@ -65,25 +45,11 @@ public class BlackJack {
 			Players.add(new Player("Player " + (i + 1)));
 			System.out.println(Players.get(i +1)); 
 		}
- 
-		numPlayers = Integer.parseInt(Buffer);
-		this.shoe.shuffle();
-		
+
 		do{
 			this.playHand();
 			System.out.println("Please enter 1 to play another hand, 2 to quit");
-			
-			Buffer = scan.next(); 
-			while(!valid) {
-				if(isNumeric(Buffer)) {
-					valid = true; 
-				}else {
-					System.out.println("Please input only numbers: \n");
-					Buffer = scan.next(); 
-				}
-			}//end of number validation check
-			valid = false; 
-			if(Integer.parseInt(Buffer) == 1) 
+			if(this.numericInputValidator(scan.next()) == 1) 
 				continueGame = true; 
 			else continueGame = false; 
 		}while(continueGame); 
@@ -100,23 +66,27 @@ public class BlackJack {
 		this.resetPlayers(); //clears the hands from previous game 
 		//deals two cards from the top of the deck to a player
 		for(Player P : this.Players) {
-			Hand newHand = new Hand();  
+			//debug//
+			Hand newHand = new Hand();
+			P.Hands.add(newHand);
 			this.hit(newHand);
+			//newHand.myCards.add(new card(10, "Spades")); 
+			//newHand.updateHandValue(); 
 			this.hit(newHand);
-			/*
-			if(newHand.myCards.get(0) == newHand.myCards.get(1)) {
-				P.splitHands.add(splitLogic(P.Hand, P)); 
-			} */ 
+			//System.out.println("Now comparing " +newHand.myCards.get(0) + " and " + newHand.myCards.get(1) ); 
 			
 			if(P.name != "House") {
 				System.out.println(P.name + ": " + newHand + "\n"); 
 			}
 			
+			if(newHand.myCards.get(0).myValue == newHand.myCards.get(1).myValue) {
+				splitLogic(newHand, P);
+			}
+			
 			if(newHand.myValue == 21) {
 				System.out.println("BLACKJACK! \n");
 				newHand.blackJack = true; 
-			}
-			P.Hands.add(newHand); 
+			} 
 		}//end of starting deal
 		
 //////////////////////////////////////////////////////////END OF STARTING DEAL////////////////////////////////////////////////////
@@ -138,23 +108,16 @@ public class BlackJack {
 			System.out.println(currentPlayer.name + " your turn \n "); 
 			for(Hand H : currentPlayer.Hands) {
 				do {
-					if(currentPlayer.Hands.size() == 1)
+					if(currentPlayer.Hands.size() == 1) {
+						System.out.println(H); 
 						System.out.println("enter 1 to hit 2 to stay: \n"); 
-					else
+					}
+					else {
+						System.out.println(H);
 						System.out.println("Hand " +  currentPlayer.Hands.indexOf(H) + " Enter 1 to hit 2 to stay: \n");
+					}
 					
-					
-					Buffer = scan.next(); 
-					while(!valid) {
-						if(isNumeric(Buffer)) {
-								valid = true; 
-							}else {
-								System.out.println("Please input only numbers: \n");
-								Buffer = scan.next(); 
-							}
-						}//end of number validation check
-					valid = false; 
-					playerResponse = Integer.parseInt(Buffer);
+					playerResponse = this.numericInputValidator(scan.next());
 					
 					if(playerResponse == 1) {
 						this.hit(H);
@@ -256,31 +219,51 @@ public class BlackJack {
 			P.reset();
 		}//end of P loop
 	}//end of reset players
-	/* 
-	public ArrayList<card> splitLogic(ArrayList<card> doubleHand, Player P) {
+	
+	//takes input string confirms it is composed of only numbers then returns that number as an int
+	public int numericInputValidator (String S) {
+		Boolean valid = false;  
+		while(!valid) {
+			if(isNumeric(S)) {
+				valid = true; 
+			}else {
+				System.out.println("Please input only numbers: \n");
+				S = scan.next(); 
+			}
+		}//end of number validation check
+		return Integer.parseInt(S); 
+	}//end of numeric Input Validator
+	
+	
+	public void splitLogic(Hand doubleHand, Player P) {
+		if(P.name == "House") return; 
+		
 		
 		System.out.println("SPLIT OPPERTUNITY! \n"
 				+ "Please enter 1 if you want to split 2 to continue \n");
-		Buffer = scan.next(); 
-		while(!valid) {
-		if(isNumeric(Buffer)) {
-			valid = true; 
-		}else {
-			System.out.println("Please input only numbers: \n");
-			Buffer = scan.next(); 
-		}
-		}//end of number validation check
-		valid = false; 
-		playerResponse = Integer.parseInt(Buffer);
+		
+		playerResponse = this.numericInputValidator(scan.next()); 
 		
 		if(playerResponse ==1) {
-			ArrayList <card> newHand = new ArrayList<card>(); 
-			//split the hand
-			newHand.add(doubleHand.remove(0));
+			Hand newHand = new Hand(); 
+			//split the hand by removing the first card, because the split can only happen if the first
+			//two cards dealt are the same we can just remove the first card from the list
+			newHand.myCards.add(doubleHand.myCards.remove(0)); 
+			//if the new cards dealt are also of the same value give the oppurtunity to split
 			this.hit(newHand);
-			return newHand; 
+			System.out.println(newHand); 
+			if(newHand.myCards.get(0).myValue == newHand.myCards.get(1).myValue) {
+				splitLogic(newHand, P); 
+			}
+			this.hit(doubleHand);
+			System.out.println(doubleHand); 
+			if(doubleHand.myCards.get(0).myValue == doubleHand.myCards.get(1).myValue) {
+				splitLogic(doubleHand, P); 
+			}
+			P.Hands.add(newHand); 
+			return; 
 		}
-		else return null; 
+		else return; 
 	}//end of split logic
-	*/ 
+
 }//end of BlackJack
